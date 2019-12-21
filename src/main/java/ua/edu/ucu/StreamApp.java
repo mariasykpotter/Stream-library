@@ -1,4 +1,5 @@
 package ua.edu.ucu;
+
 import ua.edu.ucu.stream.*;
 
 

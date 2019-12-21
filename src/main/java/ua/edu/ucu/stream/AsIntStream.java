@@ -87,7 +87,14 @@ public class AsIntStream implements IntStream {
     @Override
     public IntStream filter(IntPredicate predicate) {
         check();
-        return new AsIntStream(new FilterIterator(predicate));
+        ArrayList<Integer> list = new ArrayList<>();
+        for (int el : this.toIterable()) {
+            if (predicate.test(el)) {
+                list.add(el);
+            }
+        }
+
+        return new AsIntStream(list.iterator());
     }
 
     @Override
@@ -112,8 +119,9 @@ public class AsIntStream implements IntStream {
     @Override
     public int reduce(int identity, IntBinaryOperator op) {
         check();
+        System.out.println(this.iterator.hasNext());
         while (this.iterator.hasNext()) {
-            identity = op.apply(identity,this.iterator.next());
+            identity = op.apply(identity, this.iterator.next());
         }
         return identity;
     }
@@ -136,31 +144,6 @@ public class AsIntStream implements IntStream {
     public void check() {
         if (!iterator.hasNext()) {
             throw new IllegalArgumentException();
-        }
-    }
-
-    private class FilterIterator implements Iterator<Integer> {
-        private IntPredicate predicate;
-        private int val;
-
-        FilterIterator(IntPredicate predicate) {
-            this.predicate = predicate;
-        }
-
-        @Override
-        public boolean hasNext() {
-            while (iterator.hasNext()) {
-                val = iterator.next();
-                if (predicate.test(val)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        @Override
-        public Integer next() {
-            return val;
         }
     }
 

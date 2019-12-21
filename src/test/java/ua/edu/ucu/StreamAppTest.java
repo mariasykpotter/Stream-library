@@ -2,13 +2,13 @@ package ua.edu.ucu;
 
 import ua.edu.ucu.stream.*;
 import org.junit.Test;
+
 import static org.junit.Assert.*;
 import static ua.edu.ucu.StreamApp.streamOperations;
 
 import org.junit.Before;
 
 /**
- *
  * @author andrii
  */
 public class StreamAppTest {

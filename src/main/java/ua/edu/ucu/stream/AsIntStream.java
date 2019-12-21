@@ -1,19 +1,22 @@
 package ua.edu.ucu.stream;
+
 import ua.edu.ucu.function.*;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 
 public class AsIntStream implements IntStream {
-    private Integer sum;
-    private Integer counter;
     private Iterator<Integer> iterator;
+
     private AsIntStream(Iterator<Integer> iterator) {
         this.iterator = iterator;
     }
+
     public Iterable<Integer> toIterable() {
         return () -> iterator;
     }
+
     public static Iterator<Integer> addElem(int... values) {
         ArrayList<Integer> list = new ArrayList<>();
         for (int el : values) {
@@ -28,10 +31,14 @@ public class AsIntStream implements IntStream {
 
     @Override
     public Double average() {
-//        System.out.println(count());
-//        System.out.println(sum());
-
-        return  (double)this.sum() / this.count();
+        check();
+        int sum = 0;
+        int counter = 0;
+        for (int elem : toIterable()) {
+            sum += elem;
+            counter += 1;
+        }
+        return (double) sum / counter;
     }
 
     @Override
@@ -60,19 +67,19 @@ public class AsIntStream implements IntStream {
 
     @Override
     public long count() {
-        this.counter = 0;
-        for (int i: this.toIterable()){
-            this.counter++;
+        int counter = 0;
+        while (this.iterator.hasNext()) {
+            counter++;
         }
-        return this.counter;
+        return counter;
     }
 
     @Override
     public Integer sum() {
         check();
-        this.sum = 0;
+        int sum = 0;
         for (int i : this.toIterable()) {
-            this.sum += i;
+            sum += i;
         }
         return sum;
     }
@@ -105,10 +112,10 @@ public class AsIntStream implements IntStream {
     @Override
     public int reduce(int identity, IntBinaryOperator op) {
         check();
-        while (this.iterator.hasNext()) {
-            identity = op.apply(identity, this.iterator.next());
+        for (int elem : toIterable()) {
+            identity = op.apply(identity, elem);
+            System.out.println(identity);
         }
-
         return identity;
     }
 

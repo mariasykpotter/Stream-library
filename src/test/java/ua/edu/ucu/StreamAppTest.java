@@ -3,7 +3,7 @@ package ua.edu.ucu;
 import ua.edu.ucu.stream.*;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import static ua.edu.ucu.stream.AsIntStream.*;
+import static ua.edu.ucu.StreamApp.streamOperations;
 
 import org.junit.Before;
 
@@ -25,7 +25,7 @@ public class StreamAppTest {
     public void testStreamOperations() {
         System.out.println("streamOperations");
         int expResult = 42;
-        int result = StreamApp.streamOperations(intStream);
+        int result = streamOperations(intStream);
         assertEquals(expResult, result);
     }
 
@@ -44,5 +44,6 @@ public class StreamAppTest {
         String result = StreamApp.streamForEach(intStream);
         assertEquals(expResult, result);
     }
+
 
 }

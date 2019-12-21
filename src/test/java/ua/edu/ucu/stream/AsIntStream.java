@@ -1,5 +1,4 @@
 package ua.edu.ucu.stream;
-
 import ua.edu.ucu.function.*;
 
 public class AsIntStream implements IntStream {

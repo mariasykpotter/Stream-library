@@ -1,5 +1,4 @@
 package ua.edu.ucu.stream;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,6 +16,8 @@ public class AsIntStreamTest {
     @Test
     public void testAverage() {
         double expectedValue = 6;
+        System.out.println(this.intStream.sum());
+        System.out.println(this.intStream.count());
         assertEquals(expectedValue, this.intStream.average(), Integer.MIN_VALUE);
     }
 

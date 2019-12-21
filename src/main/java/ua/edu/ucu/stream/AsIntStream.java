@@ -1,29 +1,22 @@
 package ua.edu.ucu.stream;
-
 import ua.edu.ucu.function.*;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 
 public class AsIntStream implements IntStream {
-    //    ArrayList<Integer> streamArr;
     private Iterator<Integer> iterator;
-
     private AsIntStream(Iterator<Integer> iterator) {
         this.iterator = iterator;
     }
-
     public Iterable<Integer> toIterable() {
         return () -> iterator;
     }
-
     public static Iterator<Integer> addElem(int... values) {
         ArrayList<Integer> list = new ArrayList<>();
         for (int el : values) {
             list.add(el);
         }
-        System.out.println(list.iterator());
         return list.iterator();
     }
 
@@ -33,10 +26,6 @@ public class AsIntStream implements IntStream {
 
     @Override
     public Double average() {
-        check();
-        if (this.count()==0) {
-            return 0.0;
-        }
         return  (double)sum() / count();
     }
 
@@ -180,29 +169,6 @@ public class AsIntStream implements IntStream {
         public Integer next() {
             while (iterator.hasNext()) {
                 return action.apply(iterator.next());
-            }
-            return null;
-        }
-    }
-
-    private static class StreamIterator implements Iterator<Integer> {
-        private int[] values;
-        private int i = 0;
-
-        public StreamIterator(int[] values) {
-            this.values = values;
-        }
-
-        @Override
-        public boolean hasNext() {
-            return i <= this.values.length;
-        }
-
-        @Override
-        public Integer next() {
-            if (this.hasNext()) {
-                i++;
-                return this.values[i - 1];
             }
             return null;
         }

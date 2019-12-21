@@ -1,8 +1,6 @@
 package ua.edu.ucu;
-
 import ua.edu.ucu.stream.*;
 
-import java.util.Arrays;
 
 public class StreamApp {
 

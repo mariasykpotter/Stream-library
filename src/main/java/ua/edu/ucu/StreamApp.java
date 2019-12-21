@@ -6,15 +6,11 @@ import java.util.Arrays;
 
 public class StreamApp {
 
-    public static void streamOperations(IntStream intStream) {
-        intStream = AsIntStream.of(-1, 0, 1, 2, 3);
-        System.out.println(Arrays.toString(intStream.filter(x -> x > 0).toArray()));
-//        int res =
-        // 1, 2, 3
-//                .map(x -> x * x) // 1, 4, 9
-//                .flatMap(x -> AsIntStream.of(x - 1, x, x + 1)) // 0, 1, 2, 3, 4, 5, 8, 9, 10
-//                .reduce(0, (sum, x) -> sum += x); // 42
-//        return res;
+    public static int streamOperations(IntStream intStream) {
+        return intStream.filter(x -> x > 0)   // 1, 2, 3
+                .map(x -> x * x)        // 1, 4, 9
+                .flatMap(x -> AsIntStream.of(x - 1, x, x + 1)) // 0, 1, 2, 3, 4, 5, 8, 9, 10
+                .reduce(0, (sum, x) -> sum += x); // 42
     }
 
     public static int[] streamToArray(IntStream intStream) {

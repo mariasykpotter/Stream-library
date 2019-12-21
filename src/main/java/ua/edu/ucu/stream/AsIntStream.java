@@ -3,6 +3,7 @@ package ua.edu.ucu.stream;
 import ua.edu.ucu.function.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 
 public class AsIntStream implements IntStream {
@@ -17,11 +18,12 @@ public class AsIntStream implements IntStream {
         return () -> iterator;
     }
 
-    public static Iterator addElem(int... values) {
-        ArrayList<Integer> list = new ArrayList();
+    public static Iterator<Integer> addElem(int... values) {
+        ArrayList<Integer> list = new ArrayList<>();
         for (int el : values) {
             list.add(el);
         }
+        System.out.println(list.iterator());
         return list.iterator();
     }
 
@@ -32,7 +34,10 @@ public class AsIntStream implements IntStream {
     @Override
     public Double average() {
         check();
-        return (double) sum() / count();
+        if (this.count()==0) {
+            return 0.0;
+        }
+        return  (double)sum() / count();
     }
 
     @Override
@@ -80,11 +85,8 @@ public class AsIntStream implements IntStream {
 
     @Override
     public IntStream filter(IntPredicate predicate) {
-        Iterable<Integer> filtered = () -> new FilterIterator(predicate);
-        for (int el:filtered){
-            System.out.println(el);
-        }
-        return new AsIntStream(filtered.iterator());
+        check();
+        return new AsIntStream(new FilterIterator(predicate));
     }
 
     @Override
@@ -96,48 +98,50 @@ public class AsIntStream implements IntStream {
 
     @Override
     public IntStream map(IntUnaryOperator mapper) {
-        Iterable<Integer> mapped = () -> new MapIterator(mapper);
-        return new AsIntStream(mapped.iterator());
+        check();
+        return new AsIntStream(new MapIterator(mapper));
     }
 
     @Override
     public IntStream flatMap(IntToIntStreamFunction func) {
-        Iterable<Integer> flatted = () -> new FlattenIterator(func);
-        return new AsIntStream(flatted.iterator());
+        check();
+        return new AsIntStream(new FlattenIterator(func));
     }
 
     @Override
     public int reduce(int identity, IntBinaryOperator op) {
-        int val = identity;
-        for (int el : this.toIterable()) {
-            val = op.apply(identity, el);
+        check();
+        while (this.iterator.hasNext()) {
+            identity = op.apply(identity, this.iterator.next());
         }
-        return val;
+
+        return identity;
     }
 
     @Override
     public int[] toArray() {
-        ArrayList<Integer> list = new ArrayList();
+        ArrayList<Integer> list = new ArrayList<>();
         for (int el : toIterable()) {
             list.add(el);
         }
         int[] intList = new int[list.size()];
         int i = 0;
-        while (this.iterator.hasNext()) {
-            intList[i] = this.iterator.next();
+        for (int elem : list) {
+            intList[i] = elem;
             i++;
         }
         return intList;
     }
 
     public void check() {
-        if (iterator == null || !iterator.hasNext()) {
-            throw new IllegalArgumentException("Stream is empty!");
+        if (!iterator.hasNext()) {
+            throw new IllegalArgumentException();
         }
     }
 
     private class FilterIterator implements Iterator<Integer> {
         private IntPredicate predicate;
+        private int val;
 
         FilterIterator(IntPredicate predicate) {
             this.predicate = predicate;
@@ -145,19 +149,18 @@ public class AsIntStream implements IntStream {
 
         @Override
         public boolean hasNext() {
-            return iterator.hasNext();
+            while (iterator.hasNext()) {
+                val = iterator.next();
+                if (predicate.test(val)) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         @Override
         public Integer next() {
-            System.out.println(iterator.hasNext());
-            while (iterator.hasNext()) {
-                int value = iterator.next();
-                if (predicate.test(value)) {
-                    return value;
-                }
-            }
-            return null;
+            return val;
         }
     }
 
@@ -199,7 +202,7 @@ public class AsIntStream implements IntStream {
         public Integer next() {
             if (this.hasNext()) {
                 i++;
-                return this.values[i-1];
+                return this.values[i - 1];
             }
             return null;
         }
@@ -212,8 +215,8 @@ public class AsIntStream implements IntStream {
 
         FlattenIterator(IntToIntStreamFunction func) {
             this.func = func;
-            this.iter = iter;
-            this.list = list;
+            this.iter = Collections.emptyIterator();
+            this.list = new ArrayList<Integer>();
         }
 
         @Override
@@ -223,7 +226,7 @@ public class AsIntStream implements IntStream {
 
         @Override
         public Integer next() {
-            if (iterator.hasNext()) {
+            while (iterator.hasNext()) {
                 IntStream Intstreamm = this.func.applyAsIntStream(iterator.next());
                 for (int el : Intstreamm.toArray()) {
                     this.list.add(el);

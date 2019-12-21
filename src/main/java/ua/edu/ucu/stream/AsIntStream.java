@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.Iterator;
 
 public class AsIntStream implements IntStream {
+    private Integer sum;
+    private Integer counter;
     private Iterator<Integer> iterator;
     private AsIntStream(Iterator<Integer> iterator) {
         this.iterator = iterator;
@@ -26,7 +28,10 @@ public class AsIntStream implements IntStream {
 
     @Override
     public Double average() {
-        return  (double)sum() / count();
+//        System.out.println(count());
+//        System.out.println(sum());
+
+        return  (double)this.sum() / this.count();
     }
 
     @Override
@@ -55,21 +60,21 @@ public class AsIntStream implements IntStream {
 
     @Override
     public long count() {
-        int size = 0;
-        while(!this.iterator.hasNext()){
-            size++;
+        this.counter = 0;
+        for (int i: this.toIterable()){
+            this.counter++;
         }
-        return size;
+        return this.counter;
     }
 
     @Override
     public Integer sum() {
         check();
-        int suma = 0;
+        this.sum = 0;
         for (int i : this.toIterable()) {
-            suma += i;
+            this.sum += i;
         }
-        return suma;
+        return sum;
     }
 
     @Override

@@ -112,9 +112,8 @@ public class AsIntStream implements IntStream {
     @Override
     public int reduce(int identity, IntBinaryOperator op) {
         check();
-        for (int elem : toIterable()) {
-            identity = op.apply(identity, elem);
-            System.out.println(identity);
+        while (this.iterator.hasNext()) {
+            identity = op.apply(identity,this.iterator.next());
         }
         return identity;
     }

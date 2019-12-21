@@ -56,7 +56,7 @@ public class AsIntStream implements IntStream {
     @Override
     public long count() {
         int size = 0;
-        for (int i : toIterable()) {
+        while(!this.iterator.hasNext()){
             size++;
         }
         return size;

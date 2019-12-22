@@ -118,7 +118,7 @@ public class AsIntStreamTest {
     }
     @Test
     public void testCount2() {
-        long expectedValue = 10;
+        long expectedValue = 9;
 
         assertEquals(expectedValue, this.intStream2.count());
     }
@@ -213,10 +213,7 @@ public class AsIntStreamTest {
     public void testMapWithEmpty() {
         AsIntStream.of().map(x -> x / 2 * x);
     }
-//    private int[] intArr = {-1, 0, 1, 2, 3};
-//    private int[] intArr1 = {1, 4, 9};
-//    private int[] intArr2 = {0, 1, 2, 3, 4, 5, 8, 9, 10};
-//    private int[] intArr3 = {1, 2, 3};
+
     @Test
     public void testFlatMap() {
         int[] expectedValue = {-2, 0, -1, 1, 0, 2, 1, 3, 2, 4};

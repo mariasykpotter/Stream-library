@@ -68,7 +68,7 @@ public class AsIntStream implements IntStream {
     @Override
     public long count() {
         int counter = 0;
-        while (this.iterator.hasNext()) {
+        for (int i : this.toIterable()) {
             counter++;
         }
         return counter;
@@ -119,7 +119,6 @@ public class AsIntStream implements IntStream {
     @Override
     public int reduce(int identity, IntBinaryOperator op) {
         check();
-        System.out.println(this.iterator.hasNext());
         while (this.iterator.hasNext()) {
             identity = op.apply(identity, this.iterator.next());
         }
